@@ -12,29 +12,29 @@ public class clsCommit {
     private SQLiteDatabase db;
     private BaseDatos Con;
 
-    private String errcode,errstr,sql;
+    private String resultcode, resultstr,sql;
 
     public clsCommit(Context context) {
         cont=context;
     }
 
     public String commit(String cmd) {
-        errcode="000";errstr="";
-
+        resultcode ="000";
+        resultstr ="";
 
         if (openDatabase()) {
             if (parseCommands(cmd)) executeCommit();
             closeDatabase();
         }
 
-        return errcode+"\n"+errstr;
+        return "C\n"+resultcode +"\n"+ resultstr;
     }
 
     public void dispose() {
 
     }
 
-   //region Events
+    //region Events
 
 
     //endregion
@@ -45,7 +45,8 @@ public class clsCommit {
         try {
             db.execSQL(sql);
         } catch (Exception e) {
-            errcode="002";errstr=e.getMessage();
+            resultcode ="100";
+            resultstr =e.getMessage();
         }
     }
 
@@ -66,7 +67,7 @@ public class clsCommit {
 
             return true;
         } catch (Exception e) {
-            errcode="001";errstr="No se puede conectar a la base datos";return false;
+            resultcode ="010"; resultstr =e.getMessage();return false;
         }
     }
 
@@ -82,6 +83,5 @@ public class clsCommit {
 
 
     //endregion
-
 
 }

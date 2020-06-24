@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dts.classes.clsCommit;
+import com.dts.classes.clsSelect;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -34,6 +35,7 @@ public class Main extends AppCompatActivity {
     private Thread Thread1 = null;
 
     private clsCommit commit;
+    private clsSelect select;
 
     private PrintWriter output;
     private BufferedReader input;
@@ -130,9 +132,7 @@ public class Main extends AppCompatActivity {
 
             while (true) {
                 try {
-
                     final String message = input.readLine();
-
                     if (message!=null) {
                         runOnUiThread(new Runnable() {
                             @Override
@@ -140,10 +140,9 @@ public class Main extends AppCompatActivity {
                                 if (!message.isEmpty()) {
                                     command+=message ;
                                 } else {
-                                    //enter;
                                     lblMsg.setText("Received:" + command );
-                                    command="INSERT INTO TEST VALUES('"+getCorelTimeStr()+"',0)";
                                     processCommand();
+                                    if (!answer.isEmpty()) new Thread(new Sender(answer)).start();
                                 }
                             }
                         });
@@ -156,7 +155,6 @@ public class Main extends AppCompatActivity {
                     showerr(e.getMessage());
                 }
             }
-
         }
     }
 
@@ -192,12 +190,35 @@ public class Main extends AppCompatActivity {
     //region Main
 
     private void processCommand() {
+        String comtype="",comtext="";
+
         try {
-            commit=new clsCommit(this);
-            commit.commit(command);
-            commit.dispose();
+            String[] coms = command.split("\n");
+
+            if (coms.length!=2) {
+                answer="E\n002\nFormato de comando incorreco";return;
+            }
+
+            comtype=coms[0];
+            comtext=coms[1];
         } catch (Exception e) {
             toast(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
+        }
+
+        try {
+            if (comtype.equalsIgnoreCase("S")) {
+                select=new clsSelect(this);
+                answer=select.select(command);
+                select.dispose();
+            } else if (comtype.equalsIgnoreCase("E")) {
+                commit=new clsCommit(this);
+                answer=commit.commit(command);
+                commit.dispose();
+            } else {
+                answer="E\n003\nComando desconocido";
+            }
+        } catch (Exception e) {
+            answer="E\n001\n"+e.getMessage();
         }
     }
 

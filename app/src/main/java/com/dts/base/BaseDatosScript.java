@@ -69,8 +69,16 @@ public class BaseDatosScript {
 	}
 
 	public int scriptData(SQLiteDatabase db) {
+	    String sql;
 
 		try {
+
+		    sql="INSERT INTO P_stock VALUES (1,3,1, 22, 5,0,  0,0,'',0,'UN',0,0,0,0,'')";
+            db.execSQL(sql);
+            sql="INSERT INTO P_stock VALUES (2,3,1, 36,20,0,  0,0,'',0,'UN',0,0,0,0,'')";
+            db.execSQL(sql);
+            sql="INSERT INTO P_stock VALUES (3,3,1, 38,25,0,  0,0,'',0,'UN',0,0,0,0,'')";
+            db.execSQL(sql);
 
             return 1;
 		} catch (SQLiteException e) {
