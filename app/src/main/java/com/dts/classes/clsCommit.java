@@ -21,6 +21,7 @@ public class clsCommit {
     public String commit(String cmd) {
         errcode="000";errstr="";
 
+
         if (openDatabase()) {
             if (parseCommands(cmd)) executeCommit();
             closeDatabase();
